@@ -1,0 +1,41 @@
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { Module } from '@nestjs/common';
+import { GraphQLModule } from '@nestjs/graphql';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { config } from 'dotenv';
+import { SurveyModule } from './module/survey/survey.module';
+import { SurveyEntity } from './orm_entity/survey.entity';
+import { ChoiceEntity } from './orm_entity/choice.entity';
+import { QuestionEntity } from './orm_entity/question.entity';
+import { UserEntity } from './orm_entity/user.entity';
+import { UserAnswerEntity } from './orm_entity/user_answer.entity';
+config();
+
+@Module({
+  imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      autoSchemaFile: true,
+      driver: ApolloDriver,
+      playground: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT,
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      entities: [
+        SurveyEntity,
+        ChoiceEntity,
+        QuestionEntity,
+        UserEntity,
+        UserAnswerEntity,
+      ],
+      synchronize: true,
+      logging: true,
+    }),
+    SurveyModule,
+  ],
+})
+export class AppModule {}
