@@ -8,7 +8,7 @@ import {
 import { UserEntity } from './user.entity';
 import { ChoiceEntity } from './choice.entity';
 
-@Entity()
+@Entity('user_answer')
 export class UserAnswerEntity {
   @PrimaryGeneratedColumn({ name: 'id', type: 'int', unsigned: true })
   id: number;

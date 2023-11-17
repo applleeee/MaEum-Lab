@@ -17,6 +17,11 @@ config();
       autoSchemaFile: true,
       driver: ApolloDriver,
       playground: true,
+      formatError: (error) => ({
+        message: error.message,
+        path: error.path,
+        code: error.extensions.code,
+      }),
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
