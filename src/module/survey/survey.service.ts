@@ -10,7 +10,9 @@ export class SurveyService {
 
   async createOne(title: string): Promise<SurveyEntity> {
     try {
-      return await this.SurveyRepository.createOne(title);
+      const result = await this.SurveyRepository.createOne(title);
+      this.logger.log('Survey successfully created');
+      return result;
     } catch (error) {
       const message = 'Cannot create new survey in DB';
       this.logger.error(message, error.stack);
@@ -32,10 +34,31 @@ export class SurveyService {
   }
 
   async updateOne(id: number, title: string): Promise<SurveyEntity> {
-    return await this.SurveyRepository.updateOne(id, title);
+    const survey = await this.SurveyRepository.findOne(id);
+
+    survey.title = title;
+    try {
+      const updateResult = await this.SurveyRepository.updateOne(survey);
+      this.logger.log('Survey successfully updated');
+      return updateResult;
+    } catch (error) {
+      const message = 'Cannot save updated survey in DB';
+      this.logger.error(message, error.stack);
+      throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   async deleteOne(id: number): Promise<SurveyEntity> {
-    return await this.SurveyRepository.deleteOne(id);
+    const survey = await this.SurveyRepository.findOne(id);
+
+    const deleteResult = await this.SurveyRepository.deleteOne(id);
+    if (deleteResult.affected !== 1) {
+      const message = 'There was a problem with the deletion';
+      this.logger.error(message);
+      throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    this.logger.log('Survey successfully deleted');
+    return survey;
   }
 }
