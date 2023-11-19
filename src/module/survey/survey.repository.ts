@@ -12,18 +12,6 @@ export class SurveyRepository {
     private readonly surveyRepository: Repository<SurveyEntity>,
   ) {}
 
-  async findOne(id: number): Promise<SurveyEntity> {
-    const survey = await this.surveyRepository.findOne({ where: { id } });
-
-    if (!survey) {
-      const message = 'Cannot find survey with this id in DB';
-      this.logger.error(message);
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
-    }
-
-    return survey;
-  }
-
   async createOne(title: string): Promise<SurveyEntity> {
     const survey = new SurveyEntity();
     survey.title = title;
@@ -32,6 +20,26 @@ export class SurveyRepository {
 
   async findAll(): Promise<SurveyEntity[]> {
     return this.surveyRepository.find();
+  }
+
+  async find(surveyIds: number[]): Promise<SurveyEntity[]> {
+    const surveys = await this.surveyRepository
+      .createQueryBuilder()
+      .where('id IN (:...surveyIds)', { surveyIds })
+      .getMany();
+
+    if (surveys.length === 0) {
+      const message = 'Cannot find survey with this id in DB';
+      this.logger.error(message);
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+    }
+    if (surveyIds.length !== surveys.length) {
+      const message = 'There is wrong id in list';
+      this.logger.error(message);
+      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+    }
+
+    return surveys;
   }
 
   async updateOne(survey: SurveyEntity): Promise<SurveyEntity> {

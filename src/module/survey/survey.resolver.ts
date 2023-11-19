@@ -16,9 +16,17 @@ export class SurveyResolver {
     return await this.surveyService.createOne(title);
   }
 
-  @Query(() => [SurveyEntity])
-  async findAllSurveys() {
-    return await this.surveyService.findAll();
+  @Query(() => [SurveyEntity], {
+    description:
+      'surveyIds에 빈 배열 입력 시 전체 설문을 리턴합니다. 배열 안에 특정 id 입력 시 그에 해당하는 설문을 리턴합니다.',
+  })
+  async findSurveys(
+    @Args('surveyIds', {
+      type: () => [Number],
+    })
+    surveyIds: number[],
+  ) {
+    return await this.surveyService.find(surveyIds);
   }
 
   @Mutation(() => SurveyEntity)

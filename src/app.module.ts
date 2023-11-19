@@ -9,6 +9,7 @@ import { ChoiceEntity } from './orm_entity/choice.entity';
 import { QuestionEntity } from './orm_entity/question.entity';
 import { UserEntity } from './orm_entity/user.entity';
 import { UserAnswerEntity } from './orm_entity/user_answer.entity';
+import { QuestionModule } from './module/question/question.module';
 config();
 
 @Module({
@@ -41,6 +42,7 @@ config();
       logging: true,
     }),
     SurveyModule,
+    QuestionModule,
   ],
 })
 export class AppModule {}
