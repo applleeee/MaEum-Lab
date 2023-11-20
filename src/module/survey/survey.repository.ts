@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SurveyEntity } from 'src/orm_entity/survey.entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -15,7 +21,7 @@ export class SurveyRepository {
   async createOne(title: string): Promise<SurveyEntity> {
     const survey = new SurveyEntity();
     survey.title = title;
-    return this.surveyRepository.save(survey);
+    return await this.surveyRepository.save(survey);
   }
 
   async findAll(): Promise<SurveyEntity[]> {
@@ -31,12 +37,12 @@ export class SurveyRepository {
     if (surveys.length === 0) {
       const message = 'Cannot find survey with this id in DB';
       this.logger.error(message);
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(message);
     }
     if (surveyIds.length !== surveys.length) {
       const message = 'There is wrong id in list';
       this.logger.error(message);
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(message);
     }
 
     return surveys;

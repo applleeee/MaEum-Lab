@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+} from '@nestjs/common';
 import { QuestionRepository } from './question.repository';
 import { QuestionEntity } from 'src/orm_entity/question.entity';
 
@@ -43,7 +49,7 @@ export class QuestionService {
     if (result.length === 0) {
       const message = 'Cannot find question with this id in DB';
       this.logger.error(message);
-      throw new HttpException(message, HttpStatus.BAD_REQUEST);
+      throw new BadRequestException(message);
     }
 
     return result;
