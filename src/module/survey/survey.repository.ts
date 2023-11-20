@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SurveyEntity } from 'src/orm_entity/survey.entity';
 import { DeleteResult, Repository } from 'typeorm';
@@ -54,5 +48,22 @@ export class SurveyRepository {
 
   async deleteOne(id: number): Promise<DeleteResult> {
     return await this.surveyRepository.delete(id);
+  }
+
+  async getTotalScore(surveyId: number, userId: number) {
+    return await this.surveyRepository
+      .createQueryBuilder('survey')
+      .select('SUM(choice.score)', 'totalScore')
+      .leftJoin('question', 'question', 'question.surveyId = :surveyId', {
+        surveyId,
+      })
+      .leftJoin('choice', 'choice', 'choice.questionId = question.id')
+      .leftJoin(
+        'user_answer',
+        'user_answer',
+        'user_answer.choiceId = choice.id',
+      )
+      .where('user_answer.userId = :userId', { userId })
+      .getRawOne();
   }
 }

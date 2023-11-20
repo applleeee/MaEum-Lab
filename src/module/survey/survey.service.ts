@@ -57,4 +57,9 @@ export class SurveyService {
     this.logger.log('Survey successfully deleted');
     return survey[0];
   }
+
+  async getTotalScore(surveyId: number, userId: number) {
+    const result = await this.surveyRepository.getTotalScore(surveyId, userId);
+    return result.totalScore;
+  }
 }

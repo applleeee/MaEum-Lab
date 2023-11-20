@@ -1,4 +1,12 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Args,
+  Int,
+  ObjectType,
+  Field,
+} from '@nestjs/graphql';
 import { SurveyEntity } from 'src/orm_entity/survey.entity';
 import { SurveyService } from './survey.service';
 
@@ -40,5 +48,13 @@ export class SurveyResolver {
   @Mutation(() => SurveyEntity)
   async deleteSurvey(@Args('id', { type: () => Number }) id: number) {
     return await this.surveyService.deleteOne(id);
+  }
+
+  @Query(() => Number)
+  async totalScore(
+    @Args('surveyId', { type: () => Number }) surveyId: number,
+    @Args('userId', { type: () => Number }) userId: number,
+  ) {
+    return await this.surveyService.getTotalScore(surveyId, userId);
   }
 }
