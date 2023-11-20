@@ -29,3 +29,5 @@ INSERT INTO "user" ("id", "name") VALUES (1, '유저1');
 ---
 
 ## ERD
+![마음연구소 기업과제](https://github.com/applleeee/MaEum-Lab/assets/97298721/31695f69-22ca-452e-a8cb-f0159f4de14c)
+
