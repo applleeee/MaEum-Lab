@@ -11,6 +11,7 @@ import { UserEntity } from './orm_entity/user.entity';
 import { UserAnswerEntity } from './orm_entity/user_answer.entity';
 import { QuestionModule } from './module/question/question.module';
 import { ChoiceModule } from './module/choice/choice.module';
+import { AnswerModule } from './module/answer/answer.module';
 config();
 
 @Module({
@@ -45,6 +46,7 @@ config();
     SurveyModule,
     QuestionModule,
     ChoiceModule,
+    AnswerModule,
   ],
 })
 export class AppModule {}
