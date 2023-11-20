@@ -6,7 +6,10 @@ import { QuestionService } from './question.service';
 export class QuestionResolver {
   constructor(private readonly questionService: QuestionService) {}
 
-  @Mutation(() => QuestionEntity)
+  @Mutation(() => QuestionEntity, {
+    description:
+      '새 질문을 생성합니다. 질문 내용과 속한 설문지의 id를 넣어주세요.',
+  })
   async createQuestion(
     @Args('question', { type: () => String }) question: string,
     @Args('surveyId', { type: () => Number }) surveyId: number,
@@ -27,7 +30,10 @@ export class QuestionResolver {
     return await this.questionService.find(surveyIds, questionIds);
   }
 
-  @Mutation(() => QuestionEntity)
+  @Mutation(() => QuestionEntity, {
+    description:
+      '질문을 수정합니다. 수정할 질문의 id와 수정 내용을 넣어주세요.',
+  })
   async updateQuestion(
     @Args('questionId', { type: () => Number })
     questionId: number,
@@ -37,7 +43,9 @@ export class QuestionResolver {
     return await this.questionService.updateOne(questionId, question);
   }
 
-  @Mutation(() => QuestionEntity)
+  @Mutation(() => QuestionEntity, {
+    description: '삭제할 질문의 id를 넣어주세요.',
+  })
   async deleteQuestion(
     @Args('questionId', { type: () => Number })
     questionId: number,

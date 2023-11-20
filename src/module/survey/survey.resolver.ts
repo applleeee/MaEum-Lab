@@ -1,12 +1,4 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Args,
-  Int,
-  ObjectType,
-  Field,
-} from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { SurveyEntity } from 'src/orm_entity/survey.entity';
 import { SurveyService } from './survey.service';
 
@@ -14,12 +6,16 @@ import { SurveyService } from './survey.service';
 export class SurveyResolver {
   constructor(private readonly surveyService: SurveyService) {}
 
-  @Query(() => String)
+  @Query(() => String, {
+    description: '서버 테스트를 위한 api입니다.',
+  })
   test() {
     return 'Test is successful!';
   }
 
-  @Mutation(() => SurveyEntity)
+  @Mutation(() => SurveyEntity, {
+    description: '새 설문지를 생성합니다. 설문지 제목을 입력해주세요.',
+  })
   async createSurvey(@Args('title', { type: () => String }) title: string) {
     return await this.surveyService.createOne(title);
   }
@@ -37,7 +33,10 @@ export class SurveyResolver {
     return await this.surveyService.find(surveyIds);
   }
 
-  @Mutation(() => SurveyEntity)
+  @Mutation(() => SurveyEntity, {
+    description:
+      '업데이트할 설문지의 id, 바꿀 제목의 내용을 title에 넣어주세요.',
+  })
   async updateSurvey(
     @Args('id', { type: () => Number }) id: number,
     @Args('title', { type: () => String }) title: string,
@@ -45,12 +44,16 @@ export class SurveyResolver {
     return await this.surveyService.updateOne(id, title);
   }
 
-  @Mutation(() => SurveyEntity)
+  @Mutation(() => SurveyEntity, {
+    description: '삭제할 설문지의 id를 입력해주세요.',
+  })
   async deleteSurvey(@Args('id', { type: () => Number }) id: number) {
     return await this.surveyService.deleteOne(id);
   }
 
-  @Query(() => Number)
+  @Query(() => Number, {
+    description: '특정 유저의 한 설문지에 대한 총점을 반환합니다.',
+  })
   async totalScore(
     @Args('surveyId', { type: () => Number }) surveyId: number,
     @Args('userId', { type: () => Number }) userId: number,

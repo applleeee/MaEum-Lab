@@ -6,7 +6,10 @@ import { ChoiceService } from './choice.service';
 export class ChoiceResolver {
   constructor(private readonly choiceService: ChoiceService) {}
 
-  @Mutation(() => ChoiceEntity)
+  @Mutation(() => ChoiceEntity, {
+    description:
+      'choiceNumber에는 선택지의 번호(1번 문제의 1번 선택지인 경우 1), choice에는 선택지의 내용, score에는 해당 선택지의 점수, questionId에는 선택지가 속한 질문의 id를 넣어주세요.',
+  })
   async createChoice(
     @Args('choiceNumber', {
       type: () => Number,
@@ -66,7 +69,9 @@ export class ChoiceResolver {
     );
   }
 
-  @Mutation(() => ChoiceEntity)
+  @Mutation(() => ChoiceEntity, {
+    description: '삭제할 선택지의 id를 넣어주세요.',
+  })
   async deleteChoice(
     @Args('choiceId', { type: () => Number })
     choiceId: number,
